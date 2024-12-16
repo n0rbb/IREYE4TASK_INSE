@@ -9,7 +9,7 @@ for i in range(28):
 for i in range(28):
     cols.append("y" + str(i))
 #class = ["Task", "lisnH", "lisnL", "pause", "preTask"] 
-for i in range(20):
+for i in range(20): 
     nes = "eye" + str(ojitos[i]) + "_sub" + str(i + 1)
     df = pd.read_csv(nes + ".csv", header = 0, sep = ",", dtype = {'Var1' : 'string', 'Var2' : 'string'})
     df.drop(columns = ['timestamp'], inplace = True)

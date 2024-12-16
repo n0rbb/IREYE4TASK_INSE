@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-secs = 2
-v = 1 #VARIABLE PARA ESCOGER EL EXPERIMENTO. SOLO DE 0 A 2 Y MEJOR NO HACER EL 0 
+
+v = 0 #VARIABLE PARA ESCOGER EL EXPERIMENTO. SOLO DE 0 A 2 Y MEJOR NO HACER EL 0 
 touched = 0
 class0 = [0, 1]
 if touched == 0:
@@ -10,9 +10,8 @@ if touched == 0:
 else:
     class1 = ['Task', 'lisnH', 'pause', 'preTask', 'rating', 'spkH']
     class2 = ['cogH', 'comH', 'pause', 'perH', 'phyH']
-
-classeslist = [class0, class1, class2]
-cnms = ['ACTIVE', 'Var2', 'Var1']
+classeslist =  [class1, class2]
+cnms = ['Var2', 'Var1']
 classes = classeslist[v]
 colname = cnms[v]
 
@@ -24,24 +23,21 @@ ojitos = [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 for i in range(20):
     if (ojitos[i] == 0) and i != 8:   #Me voy a quitar el sujeto 9 por los problemas de la grabación
-        nes = "eye0_sub" + str(i + 1) + "_extracted.csv"
+        nes = "eye0_sub" + str(i + 1) + ".csv" #OJO, ME HE VENTILADO LAS CARACTERÍSTICAS
         df = pd.read_csv(nes, header = 0, sep = ",", dtype = {'Var1' : 'string', 'Var2' : 'string'})
         df = df.drop(columns=['timestamp', 'eyestate'])
 
         if v == 0:
-            df = df.drop(columns=[cnms[1], cnms[2]])
-        elif v == 1:
-            df = df.drop(columns=[cnms[0], cnms[2]])
-        else:
-            df = df.drop(columns=[cnms[0], cnms[1]])
+            df = df.drop(columns=[cnms[1]])
+        else:   
+            df = df.drop(columns=[cnms[0]])
         #df_out = pd.DataFrame().reindex_like(df)
         print(df)
         #df_out2 = df.groupby('Var1').nth(list(range(300)))
 
         df_out = df.groupby(colname) 
-        
-        df_out1 = df_out.nth(list(range(secs * 60))) #DATOS DE LA MUESTRA 1 
-        df_out2 = df_out.nth(list(range(secs * 60, secs * 120))) #DATOS DE LA MUESTRA 2 
+        df_out1 = df_out.nth(list(range(240))) #DATOS DE LA MUESTRA 1 (4s)
+        df_out2 = df_out.nth(list(range(240, 480))) #DATOS DE LA MUESTRA 2 (4s)
         #print(df_out1)
         #print(df_out2)
 
@@ -76,12 +72,13 @@ for i in range(20):
 
 procdata = procdata.fillna(0)
 
+
 if touched == 0:
     ender = ".csv"
 else:
     ender = "_touched.csv"
 
-procdata.to_csv("lstm_experiment_"+ str(secs) + "s_" + str(v) + ender, index = False)
+procdata.to_csv("lstm_experiment"+ str(v + 1) + "_reduced" + ender, index = False)
 
 
 
